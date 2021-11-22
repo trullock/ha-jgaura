@@ -88,6 +88,7 @@ async def async_setup_platform(
 	async_add_entities(thermostatEntities)
 
 
+# https://developers.home-assistant.io/docs/core/entity/climate/
 class JGAuraThermostat(CoordinatorEntity, ClimateEntity):
 	def __init__(self, coordinator, gateway_id, id, name, email, password):
 		super().__init__(coordinator)
