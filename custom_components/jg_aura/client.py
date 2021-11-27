@@ -5,26 +5,26 @@ import urllib
 import logging
 _LOGGER = logging.getLogger(__name__)
 
-async def loadConfig(email, password):
+async def loadConfig(host, email, password):
 	async with aiohttp.ClientSession() as session:
 
-		url = 'https://europe-west2-jgaura.cloudfunctions.net/getDevices?email=' + urllib.parse.quote(email) + '&password=' + urllib.parse.quote(password)
+		url = 'https://' + host + '/getDevices?email=' + urllib.parse.quote(email) + '&password=' + urllib.parse.quote(password)
 		async with session.get(url) as resp:
 			json = await resp.json()
 			gateway = parseJson(json)
 			return gateway
 
-async def setPreset(email, password, gatewayId, deviceId, stateName):
+async def setPreset(host, email, password, gatewayId, deviceId, stateName):
 	async with aiohttp.ClientSession() as session:
-		url = 'https://europe-west2-jgaura.cloudfunctions.net/setDeviceState?email=' + urllib.parse.quote(email) + '&password=' + urllib.parse.quote(password) + '&gatewayId=' + urllib.parse.quote(str(gatewayId)) + '&deviceId=' + urllib.parse.quote(str(deviceId)) + '&stateName=' + urllib.parse.quote(stateName)
+		url = 'https://' + host + '/setDeviceState?email=' + urllib.parse.quote(email) + '&password=' + urllib.parse.quote(password) + '&gatewayId=' + urllib.parse.quote(str(gatewayId)) + '&deviceId=' + urllib.parse.quote(str(deviceId)) + '&stateName=' + urllib.parse.quote(stateName)
 		async with session.get(url) as resp:
 			text = await resp.text()
 			#_LOGGER.warn(text)
 			return resp.status == 200
 
-async def setTemperatureSetPoint(email, password, gatewayId, deviceId, temperature):
+async def setTemperatureSetPoint(host, email, password, gatewayId, deviceId, temperature):
 	async with aiohttp.ClientSession() as session:
-		url = 'https://europe-west2-jgaura.cloudfunctions.net/setTemperatureSetPoint?email=' + urllib.parse.quote(email) + '&password=' + urllib.parse.quote(password) + '&gatewayId=' + urllib.parse.quote(str(gatewayId)) + '&deviceId=' + urllib.parse.quote(str(deviceId)) + '&temp=' + urllib.parse.quote(str(temperature))
+		url = 'https://' + host + '/setTemperatureSetPoint?email=' + urllib.parse.quote(email) + '&password=' + urllib.parse.quote(password) + '&gatewayId=' + urllib.parse.quote(str(gatewayId)) + '&deviceId=' + urllib.parse.quote(str(deviceId)) + '&temp=' + urllib.parse.quote(str(temperature))
 		async with session.get(url) as resp:
 			text = await resp.text()
 			#_LOGGER.warn(text)

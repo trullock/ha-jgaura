@@ -3,12 +3,11 @@ import asyncio
 
 import logging
 
-from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
+from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, CONF_HOST
 from . import client
 from datetime import timedelta
 import async_timeout
 
-# from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.const import (
 	TEMP_CELSIUS, 
 	ATTR_TEMPERATURE
@@ -43,7 +42,7 @@ async def async_setup_platform(
 	discovery_info: DiscoveryInfoType | None = None,
 ) -> None:
 
-
+	host = discovery_info[CONF_HOST]
 	email = discovery_info[CONF_EMAIL]
 	password = discovery_info[CONF_PASSWORD]
 	
@@ -53,7 +52,7 @@ async def async_setup_platform(
 		# Note: asyncio.TimeoutError and aiohttp.ClientError are already
 		# handled by the data update coordinator.
 		async with async_timeout.timeout(10):
-			return await client.loadConfig(email, password)
+			return await client.loadConfig(host, email, password)
 
 	def find_thermostat_data(id):
 		for t in coordinator.data.thermostats:
@@ -82,7 +81,7 @@ async def async_setup_platform(
 	await coordinator.async_config_entry_first_refresh()
 
 	for thermostat in coordinator.data.thermostats:
-		jgt = JGAuraThermostat(coordinator, coordinator.data.id, thermostat.id, thermostat.name, email, password)
+		jgt = JGAuraThermostat(coordinator, coordinator.data.id, thermostat.id, thermostat.name, host, email, password)
 		jgt.setValues(thermostat)
 		thermostatEntities.append(jgt)
 	async_add_entities(thermostatEntities)
@@ -90,11 +89,12 @@ async def async_setup_platform(
 
 # https://developers.home-assistant.io/docs/core/entity/climate/
 class JGAuraThermostat(CoordinatorEntity, ClimateEntity):
-	def __init__(self, coordinator, gateway_id, id, name, email, password):
+	def __init__(self, coordinator, gateway_id, id, name, host, email, password):
 		super().__init__(coordinator)
 
 		self._gateway_id = gateway_id
 		self._id = id
+		self._host = host
 		self._email = email
 		self._password = password
 
@@ -164,12 +164,12 @@ class JGAuraThermostat(CoordinatorEntity, ClimateEntity):
 		temperature = kwargs.get(ATTR_TEMPERATURE)
 		if temperature is None:
 			return
-		await client.setTemperatureSetPoint(self._email, self._password, self._gateway_id, self._id, temperature)
+		await client.setTemperatureSetPoint(self._host, self._email, self._password, self._gateway_id, self._id, temperature)
 		await asyncio.sleep(5) # arbitrary wait as the above call is async beyond our control
 		await self.coordinator.async_request_refresh()
 
 	async def async_set_preset_mode(self, preset_mode):
-		await client.setPreset(self._email, self._password, self._gateway_id, self._id, preset_mode)
+		await client.setPreset(self._host, self._email, self._password, self._gateway_id, self._id, preset_mode)
 		await asyncio.sleep(5) # arbitrary wait as the above call is async beyond our control
 		await self.coordinator.async_request_refresh()
 
