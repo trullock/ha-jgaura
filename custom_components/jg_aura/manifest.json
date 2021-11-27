@@ -1,6 +1,6 @@
 {
   "codeowners": ["@trullock"],
-  "config_flow": true,
+  "config_flow": false,
   "dependencies": [],
   "documentation": "https://github.com/user/my_component/",
   "domain": "jg_aura",
