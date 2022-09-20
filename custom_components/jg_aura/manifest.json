@@ -1,11 +1,11 @@
 {
-  "codeowners": ["@trullock"],
-  "config_flow": false,
-  "dependencies": [],
-  "documentation": "https://github.com/user/my_component/",
-  "domain": "jg_aura",
-  "iot_class": "cloud_polling",
-  "name": "JGAura Thermostat Integration",
-  "requirements": [],
-  "version": "1.0.0"
+    "codeowners": ["@trullock"],
+    "config_flow": false,
+    "dependencies": [],
+    "documentation": "https://github.com/user/my_component/",
+    "domain": "jg_aura",
+    "iot_class": "cloud_polling",
+    "name": "JGAura Thermostat Integration",
+    "requirements": [],
+    "version": "1.1.0"
 }
