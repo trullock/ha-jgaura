@@ -105,10 +105,8 @@ class JGAuraThermostat(CoordinatorEntity, ClimateEntity):
 
         self._name = name
 
-        self._attr_hvac_modes = (
-            []
-        )  # doesnt support changing mode, its always a heater or off
-        self._attr_hvac_mode = HVACMode.OFF
+        self._attr_hvac_modes = [HVACMode.HEAT]
+        self._attr_hvac_mode = HVACMode.HEAT
         self._attr_supported_features = (
             ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.PRESET_MODE
         )
@@ -174,3 +172,10 @@ class JGAuraThermostat(CoordinatorEntity, ClimateEntity):
         self._attr_current_temperature = thermostat.tempCurrent
         self._attr_target_temperature = thermostat.tempSetPoint
         self._preset_mode = thermostat.stateName
+        self._attr_hvac_action = (
+            HVACAction.HEATING if thermostat.on is True else HVACAction.OFF
+        )
+
+    def set_hvac_mode(self, hvac_mode: HVACMode) -> None:
+        # no-op, UI can only set to HEAT which is the only supported mode
+        pass
