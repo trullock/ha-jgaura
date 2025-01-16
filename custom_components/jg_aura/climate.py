@@ -3,12 +3,12 @@ import asyncio
 
 import logging
 
-from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, CONF_HOST
+from homeassistant.const import UnitOfTemperature, CONF_EMAIL, CONF_PASSWORD, CONF_HOST
 from . import client
 from datetime import timedelta
 import async_timeout
 
-from homeassistant.const import TEMP_CELSIUS, ATTR_TEMPERATURE
+from homeassistant.const import ATTR_TEMPERATURE
 from homeassistant.components.climate.const import (
     PRESET_AWAY,
     HVACAction,
@@ -131,7 +131,7 @@ class JGAuraThermostat(CoordinatorEntity, ClimateEntity):
 
     @property
     def temperature_unit(self):
-        return TEMP_CELSIUS
+        return UnitOfTemperature.CELSIUS
 
     @property
     def preset_mode(self):
